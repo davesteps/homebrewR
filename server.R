@@ -12,6 +12,9 @@ pal<-function(n)wes_palette(n = n,name =  "Darjeeling",type = 'continuous')
 
 load('data/df.rdata')
 
+
+str(df)
+df <- as.tbl(df)
 # set.seed(1)
 # df <- df[sample(1:nrow(df),nrow(df)/2),]
 
