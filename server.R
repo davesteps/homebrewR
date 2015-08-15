@@ -41,13 +41,17 @@ p1 <- ggplot(df,aes(x=ABV))+
   geom_histogram(fill='red',alpha=0.6)
 p2 <- ggplot(df,aes(x=SRM))+
   ggtitle('Colour')+
-  scale_x_log10()+
-  geom_histogram(aes(fill=SRMcol))+
-  scale_fill_identity()
+  scale_x_log10()
+  # geom_histogram(fill=SRMcol(29))
+  # geom_histogram(aes(fill=SRMcol))
+  # scale_fill_identity()
 p3 <- ggplot(df,aes(x=IBU))+
   ggtitle('Bitterness')+
   scale_x_log10()+
   geom_histogram(fill='green',alpha=0.6)
+
+
+
 
 
 shinyServer(function(input, output,session) {
@@ -75,7 +79,7 @@ shinyServer(function(input, output,session) {
           paste(collapse = '')
         i <- grepl(exp,df$ingredients,perl = T)}      
       
-      df <- df[i&itype,]
+      df <- df%>%filter(i,itype)
       } 
     
     if(input$rdb_search == 'Style'){
@@ -95,7 +99,7 @@ shinyServer(function(input, output,session) {
     #SRMi <- df$SRM>=input$sld_SRM[1]&df$SRM<=input$sld_SRM[2]&!is.na(df$SRM)
     #ABVi <- df$ABV>=input$sld_ABV[1]&df$ABV<=input$sld_ABV[2]&!is.na(df$ABV)
     #IBUi <- df$IBU>=input$sld_IBU[1]&df$IBU<=input$sld_IBU[2]&!is.na(df$IBU)
-    df <- df[!is.na(df$IBU)&!is.na(df$ABV)&!is.na(df$SRM)&itype,]
+    df <- df%>%filter(!is.na(df$IBU),!is.na(df$ABV),!is.na(df$SRM),itype)
     
     SRM <- input$sld_SRM#17    
     IBU <- input$sld_IBU
@@ -208,6 +212,31 @@ shinyServer(function(input, output,session) {
       coord_flip()#+theme(legend.position='none')
     
     print(p)
+    
+  })
+  
+  output$IBUSRMplot <- renderPlot({
+    
+    
+    dfsub <- builddf()
+    
+    # p <- ggplot(dfsub,aes(y=SRM,x=IBU,color=style))+
+#       scale_color_manual(values = pal(length(unique(dfsub$style))))+
+#       geom_point(size=3) 
+#     # +
+#       # scale_y_log10(breaks=(1:50)*10)
+
+      p <- ggplot(dfsub,aes(y=SRM,x=IBU,color=style))+
+        # facet_wrap(~style)+
+        geom_point(size=2) +
+        geom_density2d() + 
+        scale_y_log10(breaks=(1:50)*10)+
+        scale_x_log10(breaks=(1:50)*10)+
+        scale_color_manual(values = pal(length(unique(dfsub$style))))
+      # stat_density2d(geom="tile", aes(fill = ..density..), contour = FALSE)
+    
+    
+        print(p)
     
   })
   
@@ -344,7 +373,7 @@ shinyServer(function(input, output,session) {
 
     
     p1 <-p1+geom_vline(xintercept=c(input$sld_ABV))
-    p2 <-p2+geom_vline(xintercept=c(input$sld_SRM))
+    p2 <-p2+  geom_histogram(fill=SRMcol(input$sld_SRM))+geom_vline(xintercept=c(input$sld_SRM))
     p3 <-p3+geom_vline(xintercept=c(input$sld_IBU))
        
     print(grid.arrange(p1,p2,p3,nrow=1))

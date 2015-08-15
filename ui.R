@@ -12,7 +12,7 @@ shinyUI(fluidPage(
     sidebarPanel(width = 3,
 
       
-      radioButtons('rdb_search',label = 'Search by',
+      radioButtons('rdb_search',label = 'Analyse Beers by:',
                    choices = c('Style','Character','Ingredients')),
       
       hr(),
@@ -64,7 +64,7 @@ shinyUI(fluidPage(
         ),
       hr(),
       p('Recipes by',a('beerrecipes.org',href='http://beerrecipes.org')),
-      a('@davesteps',href='https://twitter.com/davesteps')
+      p('Developed by',a('@davesteps',href='https://twitter.com/davesteps'))
 
       
       
@@ -74,30 +74,37 @@ shinyUI(fluidPage(
     mainPanel(
       conditionalPanel("input.rdb_search == 'Style'",
         tabsetPanel(type = 'pills',
-          
-          tabPanel('Summary',
-                   tableOutput('summaryTble')),
+                    tabPanel('Bitterness~Colour',
+                             h5('IBU Bitterness vs SRM colour by beer style'),
+                             plotOutput('IBUSRMplot',height = 600)),
+
+                    tabPanel('Gravity',
+                             h5('Original and final Specific Gravity'),
+                             plotOutput('GravityPlot',height = 600)),
+
+                    tabPanel('%ABV',
+                             h5('Distribution of %abv values'),
+                             plotOutput('ABVplot')),
+                    
           tabPanel('Grains',
-                   h5('Proportion of recipes containing each grain type'),
+                   h5('Fraction of recipes containing each grain type'),
                    plotOutput('maltPlot',height = 700)),
           tabPanel('Hops',
-                   h5('Proportion of recipes containing each hop type'),
+                   h5('Fraction of recipes containing each hop type'),
                    plotOutput('hopsPlot',height = 700)),
-          tabPanel('Gravity',
-                   h5('Original and final Specific Gravity'),
-                   plotOutput('GravityPlot')),
-          tabPanel('Colour',
-                   h5('SRM values by beer style'),
-                   plotOutput('SRMplot')),
-          tabPanel('%ABV',
-                   h5('Distribution of %abv values'),
-                   plotOutput('ABVplot')),
+
           tabPanel('%ABV~OG',
                    h5('Orignial Gravity vs %abv '),
                    plotOutput('OGplot',height = 500)),
-          tabPanel('IBU',
-                   h5('IBU values by beer style'),
-                   plotOutput('IBUplot'))#,
+          tabPanel('Bitterness',
+                   h5('IBU Bitterness values by style'),
+                   plotOutput('IBUplot')),
+          tabPanel('Colour',
+                   h5('SRM colour values by beer style'),
+                   plotOutput('SRMplot',height = 600)),
+          
+          tabPanel('Summary',
+                   tableOutput('summaryTble'))
           #tabPanel('SRM~IBU',
            #        h5('IBU values by beer style'),
             #       plotOutput('SRMIBUplot',height=700)),
