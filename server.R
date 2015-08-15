@@ -12,8 +12,8 @@ pal<-function(n)wes_palette(n = n,name =  "Darjeeling",type = 'continuous')
 
 load('data/df.rdata')
 
-
-str(df)
+# 
+# str(df)
 df <- as.tbl(df)
 # set.seed(1)
 # df <- df[sample(1:nrow(df),nrow(df)/2),]
@@ -81,12 +81,12 @@ shinyServer(function(input, output,session) {
     if(input$rdb_search == 'Style'){
       ci <- input$slt_styles
       
-        print(ci)
+        # print(ci)
         
-        if(!is.null(ci)){
-          i <- df$style%in%ci}
+        # if(is.null(ci)){
+          # ci <- df$style%in%ci}
         
-        df <- df[i&itype,]
+        df <- df%>%filter(style%in%ci,itype)
   }
   
   
