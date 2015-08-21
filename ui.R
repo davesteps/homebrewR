@@ -81,21 +81,21 @@ shinyUI(bootstrapPage(useShinyjs(),
                                                        tabPanel('Bitterness&Colour',
                                                                 h5('IBU Bitterness vs SRM colour by beer style'),
                                                                 plotOutput('IBUSRMplot',height = 600)),
-                                                       
-                                                       tabPanel('Gravity',
-                                                                h5('Original and final Specific Gravity'),
-                                                                plotOutput('GravityPlot',height = 600)),
-                                                       
-                                                       tabPanel('%ABV',
-                                                                h5('Distribution of %abv values'),
-                                                                plotOutput('ABVplot')),
-                                                       
+
                                                        tabPanel('Grains',
                                                                 h5('Fraction of recipes containing each grain type'),
                                                                 plotOutput('maltPlot',height = 700)),
                                                        tabPanel('Hops',
                                                                 h5('Fraction of recipes containing each hop type'),
                                                                 plotOutput('hopsPlot',height = 700)),
+                                                       
+                                                       tabPanel('%ABV',
+                                                                h5('Distribution of %abv values'),
+                                                                plotOutput('ABVplot')),
+                                                       
+                                                       tabPanel('Gravity',
+                                                                h5('Original and final Specific Gravity'),
+                                                                plotOutput('GravityPlot',height = 600)),
                                                        
                                                        tabPanel('%ABV~OG',
                                                                 h5('Orignial Gravity vs %abv '),

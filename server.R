@@ -5,7 +5,7 @@ require(shiny)
 require(ggplot2)
 require(reshape2)
 require(wesanderson)
-
+require(Cairo)
 
 
 pal<-function(n)wes_palette(n = n,name =  "Darjeeling",type = 'continuous')
@@ -126,24 +126,6 @@ shinyServer(function(input, output,session) {
   
 
   
-  output$df1 <- renderDataTable({
-    
-    builddf()#[,-c(10:12)]
-    
-  })
-  
-  output$df2 <- renderDataTable({
-    
-    builddf()#[,-c(10:12)]
-    
-  })
-  
-  output$df3 <- renderDataTable({
-    
-    builddf()#[,-c(10:12)]
-    
-  })
-  
   ###Style############
   
   output$ABVplot <- renderPlot({
@@ -171,7 +153,7 @@ shinyServer(function(input, output,session) {
     p <- ggplot(dfsub,aes(y=SRM,x=IBU))+
       facet_wrap(~style)+
       #geom_boxplot(alpha=0.5) +
-      stat_density2d(geom="tile", aes(fill = ..density..), contour = FALSE)+
+      stat_density2d(geom="tile", aes(fill = ..density..,alpha=0.5), contour = FALSE)+
       geom_point()+
       scale_y_log10()+#continuous(breaks=seq(0,20,1))+
       scale_x_log10()+
