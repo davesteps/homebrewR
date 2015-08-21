@@ -63,39 +63,12 @@ shinyServer(function(input, output,session) {
   #     when inputs change
   #  2) Its output type is a plot
 
+  itype <- reactive(df$type%in%input$chk_type)
   
-  builddf <- reactive({
-    
-    
-    itype <- df$type%in%input$chk_type
+  
+  chardf <- reactive({
+    itype <- itype()
     i <- rep(T,nrow(df))
-    
-    if(input$rdb_search == 'Ingredients'){
-      ci <- c(input$slt_malts,input$slt_hops)    
-      
-      print(ci)
-      if(!is.null(ci)){
-        exp <- paste('(?=.*',ci,')',sep='') %>%
-          paste(collapse = '')
-        i <- grepl(exp,df$ingredients,perl = T)}      
-      
-      df <- df%>%filter(i,itype)
-      } 
-    
-    if(input$rdb_search == 'Style'){
-      ci <- input$slt_styles
-      
-        # print(ci)
-        
-        # if(is.null(ci)){
-          # ci <- df$style%in%ci}
-        
-        df <- df%>%filter(style%in%ci,itype)
-  }
-  
-  
-  if(input$rdb_search == 'Character'){
-        
     #SRMi <- df$SRM>=input$sld_SRM[1]&df$SRM<=input$sld_SRM[2]&!is.na(df$SRM)
     #ABVi <- df$ABV>=input$sld_ABV[1]&df$ABV<=input$sld_ABV[2]&!is.na(df$ABV)
     #IBUi <- df$IBU>=input$sld_IBU[1]&df$IBU<=input$sld_IBU[2]&!is.na(df$IBU)
@@ -111,20 +84,47 @@ shinyServer(function(input, output,session) {
     SRMi <- (SRM-attr(SRMs,'scaled:center'))/attr(SRMs,'scaled:scale')
     IBUs <- scale(df$IBU)
     IBUi <- (IBU-attr(IBUs,'scaled:center'))/attr(IBUs,'scaled:scale')
-
+    
     i <- sqrt(((ABVs-ABVi)^2)+((IBUs-IBUi)^2)+((SRMs-SRMi)^2))[,1]
-
+    
     
     df<-df[order(i),]
     df
     
-  }
+  })
   
-
-    df#[order(df$style),]
+  styledf <- reactive({
+    itype <- itype()
+    i <- rep(T,nrow(df))
+    ci <- input$slt_styles
     
+    # print(ci)
+    
+    # if(is.null(ci)){
+    # ci <- df$style%in%ci}
+    
+    df <- df%>%filter(style%in%ci,itype)
+  })
+  
+  ingdf <- reactive({
+    
+    itype <- itype()
+    i <- rep(T,nrow(df))
+    
+    ci <- c(input$slt_malts,input$slt_hops)    
+    
+    print(ci)
+    if(!is.null(ci)){
+      exp <- paste('(?=.*',ci,')',sep='') %>%
+        paste(collapse = '')
+      i <- grepl(exp,df$ingredients,perl = T)}      
+    
+    df <- df%>%filter(i,itype)
+    df
     
   })
+  
+
   
   output$df1 <- renderDataTable({
     
@@ -149,7 +149,7 @@ shinyServer(function(input, output,session) {
   output$ABVplot <- renderPlot({
     
     
-    dfsub <- builddf()
+    dfsub <- styledf()
     
   
     p <- ggplot(dfsub,aes(y=ABV,x=style,fill=style))+
@@ -165,7 +165,7 @@ shinyServer(function(input, output,session) {
   output$SRMIBUplot <- renderPlot({
     
     
-    dfsub <- builddf()
+    dfsub <- styledf()
     
   
     p <- ggplot(dfsub,aes(y=SRM,x=IBU))+
@@ -185,7 +185,7 @@ shinyServer(function(input, output,session) {
   output$SRMplot <- renderPlot({
     
     
-    dfsub <- builddf()
+    dfsub <- styledf()
     
 
     
@@ -203,7 +203,7 @@ shinyServer(function(input, output,session) {
   output$IBUplot <- renderPlot({
     
     
-    dfsub <- builddf()
+    dfsub <- styledf()
     
     p <- ggplot(dfsub,aes(y=IBU,x=style,fill=style))+
       scale_fill_manual(values = pal(length(unique(dfsub$style))))+
@@ -218,7 +218,7 @@ shinyServer(function(input, output,session) {
   output$IBUSRMplot <- renderPlot({
     
     
-    dfsub <- builddf()
+    dfsub <- styledf()
     
     # p <- ggplot(dfsub,aes(y=SRM,x=IBU,color=style))+
 #       scale_color_manual(values = pal(length(unique(dfsub$style))))+
@@ -244,7 +244,7 @@ shinyServer(function(input, output,session) {
   output$OGplot <- renderPlot({
     
     
-    dfsub <- builddf()
+    dfsub <- styledf()
     
 
     p <- ggplot(dfsub,aes(y=ABV,x=OG,col=style))+
@@ -259,7 +259,7 @@ shinyServer(function(input, output,session) {
   
   output$summaryTble <- renderTable({
     
-    df <- builddf() %>% group_by(style) %>% 
+    df <- styledf() %>% group_by(style) %>% 
       summarise(n=n(),
                 mean.OG=mean(OG,na.rm=T),
                 mean.FG=mean(FG,na.rm=T),
@@ -274,7 +274,7 @@ shinyServer(function(input, output,session) {
   output$maltPlot <- renderPlot({
     
     
-    df <- builddf()
+    df <- styledf()
     
     malt.sum <- tapply(tolower(df$ingredients),df$style,FUN = function(x){
       (sapply(tolower(malts),FUN = function(y) length(grep(y,x)))/length(x))
@@ -297,7 +297,7 @@ shinyServer(function(input, output,session) {
   
   output$hopsPlot <- renderPlot({
     
-    df <- builddf()
+    df <- styledf()
     
     hops.sum <- tapply(tolower(df$ingredients),df$style,FUN = function(x){
       sapply(tolower(hops),FUN = function(y) length(grep(y,x)))/length(x)
@@ -319,7 +319,7 @@ shinyServer(function(input, output,session) {
   
   output$GravityPlot <- renderPlot({
     
-    df <- builddf()[,c('style','OG','FG')]
+    df <- styledf()[,c('style','OG','FG')]
     
 
     df <- melt(df)
@@ -337,7 +337,7 @@ shinyServer(function(input, output,session) {
   
   output$ingPlot <- renderPlot({
     
-    df <- builddf()
+    df <- ingdf()
   
     
     sumdf <- df %>%
@@ -360,7 +360,7 @@ shinyServer(function(input, output,session) {
   
   output$summaryTble2 <- renderTable({
     
-    df <- builddf() 
+    df <- chardf() 
     df<-df[,c('name','style','OG','FG','ABV','SRM','IBU')]    
 
     head(df,10)
