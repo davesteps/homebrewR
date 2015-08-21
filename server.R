@@ -266,7 +266,7 @@ shinyServer(function(input, output,session) {
                 mean.ABV=mean(ABV,na.rm=T),
                 mean.SRM=mean(SRM,na.rm=T),
                 mean.IBU=mean(IBU,na.rm=T))
-    
+
   data.frame(df)
     
   })
@@ -357,16 +357,40 @@ shinyServer(function(input, output,session) {
   ###Character#################
   
 
+#   
+#   output$summaryTble2 <- renderTable({
+#     
+#     df <- chardf() 
+#     str(df)
+#     df<-df[,c('name','style','OG','FG','ABV','SRM','IBU')]    
+#     
+#     head(df,10)
+#     
+#     
+#   })
+#   
+#   
+  recipe_link <- function(r){
+    a(paste(r$name,'-',r$style,'-',r$ABV,'%'),href=paste('http://beerrecipes.org/showrecipe.php?recipeid=',r$id,sep=''))
+  }
   
-  output$summaryTble2 <- renderTable({
-    
+  output$nearest <- renderUI({
     df <- chardf() 
-    df<-df[,c('name','style','OG','FG','ABV','SRM','IBU')]    
-
-    head(df,10)
     
+    wellPanel(
+      h4('Top 5 matches'),
+      recipe_link(df[1,]),br(),
+      recipe_link(df[2,]),br(),
+      recipe_link(df[3,]),br(),
+      recipe_link(df[4,]),br(),
+      recipe_link(df[5,]),br()
+                         
+    )     
+                          
     
-  })  
+  })
+  
+  
   output$ABVdensplot <- renderPlot({
     
     #dfsub <- builddf() 
