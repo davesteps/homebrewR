@@ -52,6 +52,10 @@ p3 <- ggplot(df,aes(x=IBU))+
 
 
 
+str(df)
+
+head(df)
+
 
 
 shinyServer(function(input, output,session) {
@@ -128,6 +132,13 @@ shinyServer(function(input, output,session) {
   
   ###Style############
   
+  observeEvent(input$plot1_click,{
+    
+    print(input$plot1_click)
+    
+  })
+  
+  
   output$ABVplot <- renderPlot({
     
     
@@ -138,32 +149,14 @@ shinyServer(function(input, output,session) {
       geom_boxplot(alpha=0.5) +
       scale_y_continuous(breaks=seq(0,20,1))+
       scale_fill_manual(values = pal(length(unique(dfsub$style))))+
+      theme_bw()+
       coord_flip()#+theme(legend.position='none')
 
     print(p)
     
   })
 
-  output$SRMIBUplot <- renderPlot({
-    
-    
-    dfsub <- styledf()
-    
-  
-    p <- ggplot(dfsub,aes(y=SRM,x=IBU))+
-      facet_wrap(~style)+
-      #geom_boxplot(alpha=0.5) +
-      stat_density2d(geom="tile", aes(fill = ..density..,alpha=0.5), contour = FALSE)+
-      geom_point()+
-      scale_y_log10()+#continuous(breaks=seq(0,20,1))+
-      scale_x_log10()+
-      coord_equal()
 
-    print(p)
-    
-  })
-
-  
   output$SRMplot <- renderPlot({
     
     
@@ -175,6 +168,7 @@ shinyServer(function(input, output,session) {
       #geom_boxplot(aes())+
       geom_jitter(size=3,position = position_jitter(width = .1))+
       scale_y_log10(breaks=c((1:10),seq(15,100,5)))+
+      theme_bw()+
       scale_color_identity()+#fill_manual(values = pal(length(unique(dfsub$style))))+
       coord_flip()#+theme(legend.position='none')
     
@@ -191,6 +185,7 @@ shinyServer(function(input, output,session) {
       scale_fill_manual(values = pal(length(unique(dfsub$style))))+
       geom_boxplot(alpha=0.5) +
       scale_y_log10(breaks=(1:50)*10)+
+      theme_bw()+
       coord_flip()#+theme(legend.position='none')
     
     print(p)
@@ -202,18 +197,14 @@ shinyServer(function(input, output,session) {
     
     dfsub <- styledf()
     
-    # p <- ggplot(dfsub,aes(y=SRM,x=IBU,color=style))+
-#       scale_color_manual(values = pal(length(unique(dfsub$style))))+
-#       geom_point(size=3) 
-#     # +
-#       # scale_y_log10(breaks=(1:50)*10)
 
       p <- ggplot(dfsub,aes(y=SRM,x=IBU,color=style))+
         # facet_wrap(~style)+
         geom_point(size=2) +
-        geom_density2d() + 
-        scale_y_log10(breaks=(1:50)*10)+
-        scale_x_log10(breaks=(1:50)*10)+
+        geom_density2d(alpha=0.5) + 
+        theme_bw()+
+        scale_y_log10(breaks=(1:20)*10)+
+        scale_x_log10(breaks=(1:10)*25)+
         scale_color_manual(values = pal(length(unique(dfsub$style))))
       # stat_density2d(geom="tile", aes(fill = ..density..), contour = FALSE)
     
@@ -231,6 +222,7 @@ shinyServer(function(input, output,session) {
 
     p <- ggplot(dfsub,aes(y=ABV,x=OG,col=style))+
       scale_color_manual(values = pal(length(unique(dfsub$style))))+
+      theme_bw()+
       geom_point(size=4,alpha=0.75)#+
       #stat_smooth(method='lm',se=F)#+
       #theme(legend.position='none')
@@ -266,9 +258,10 @@ shinyServer(function(input, output,session) {
     malt.sum$malt <- malts
     malt.sum <- melt(malt.sum)
     
-    p <- ggplot(malt.sum,aes(x=malt,y=value,fill=malt))+
-      geom_bar(stat="identity")+
+    p <- ggplot(malt.sum,aes(x=malt,y=value*100,fill=malt))+
+      geom_bar(stat="identity")+ylab('')+
       coord_flip()+
+      theme_bw()+
       scale_fill_manual(values = pal(length(malts)))+
       facet_wrap(~variable)
 
@@ -289,9 +282,10 @@ shinyServer(function(input, output,session) {
     hops.sum$hops <- hops
     hops.sum <- melt(hops.sum)
     
-    p <- ggplot(hops.sum,aes(x=hops,y=value,fill=hops))+
-      geom_bar(stat="identity")+
+    p <- ggplot(hops.sum,aes(x=hops,y=value*100,fill=hops))+
+      geom_bar(stat="identity")+ylab('')+
       coord_flip()+
+      theme_bw()+
       scale_fill_manual(values = pal(length(hops)))+
       facet_wrap(~variable)
     
@@ -308,6 +302,7 @@ shinyServer(function(input, output,session) {
 
     p <- ggplot(df,aes(x=style,y=value,fill=variable))+
       geom_boxplot()+
+      theme_bw()+
       scale_fill_manual(values = pal(2))+
       coord_flip()
     
@@ -329,6 +324,7 @@ shinyServer(function(input, output,session) {
     i <- order(sumdf$n,decreasing=T)[1:20]
     p <- ggplot(sumdf[i,],aes(x=style,y=n))+
       geom_bar(stat="identity")+
+      theme_bw()+
       coord_flip()
     
   
