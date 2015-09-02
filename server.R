@@ -349,7 +349,7 @@ shinyServer(function(input, output,session) {
 #   
 #   
   recipe_link <- function(r){
-    a(paste(r$name,'-',r$style,'-',r$ABV,'%'),href=paste('http://beerrecipes.org/showrecipe.php?recipeid=',r$id,sep=''))
+    a(paste(r$name,'-',r$style,'-',r$ABV,'%'),href=paste('http://beerrecipes.org/showrecipe.php?recipeid=',r$id,sep=''),target='_blank')
   }
   
   output$nearest <- renderUI({

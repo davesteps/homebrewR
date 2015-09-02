@@ -27,7 +27,7 @@ shinyUI(bootstrapPage(useShinyjs(),
                       ),
                       dashboardPage(skin = 'yellow', 
                                     title = "HomebrewR",
-                                    dashboardHeader(title = 'HomebrewR'),
+                                    dashboardHeader(title = HTML(paste(icon('beer'),'HomebrewR'))),
                                     dashboardSidebar(
                                       
                                       sidebarMenu(
@@ -70,7 +70,7 @@ shinyUI(bootstrapPage(useShinyjs(),
                                         tabItem("Style",
                                                 box(width=3,status = 'primary',
                                                     selectInput('slt_styles',
-                                                                label = h4('Choose beer styles to compare:'),
+                                                                label = h3('Choose beer styles to compare:'),
                                                                 choices = styles,
                                                                 selected=c('American Pale Ale','Imperial IPA','Weizenbock',
                                                                            'Weizen/Weissbier','Baltic Porter'),
