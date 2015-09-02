@@ -10,7 +10,7 @@ require(Cairo)
 
 pal<-function(n)wes_palette(n = n,name =  "Darjeeling",type = 'continuous')
 
-load('data/df.rdata')
+load('../homebrewR_data/df.rdata')
 
 # 
 # str(df)

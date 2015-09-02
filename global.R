@@ -56,7 +56,9 @@ hops <- sort(c("Hallertauer",
                'Amarillo Gold',
                'Simcoe',
                "Northern Brewer",
-                "Goldings"))
+                "Goldings",
+               "Galaxy",
+               "Galena"))
 
 cols <- c('#FFE699',
           '#FFD878',

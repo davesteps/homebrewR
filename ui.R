@@ -79,7 +79,7 @@ shinyUI(bootstrapPage(useShinyjs(),
                                                 tabBox(width=9,
                                                        # tabsetPanel(type = 'pills',
                                                        tabPanel('Bitterness&Colour',
-                                                                h5('IBU Bitterness vs SRM colour by beer style'),
+                                                                h5('IBU Bitterness & SRM colour profile by beer style'),
                                                                 plotOutput('IBUSRMplot',height = 600,
                                                                            click = "plot1_click"
                                                                            )),
