@@ -1,12 +1,4 @@
 #require(plyr)
-require(gridExtra)
-require(dplyr)
-require(shiny)
-require(ggplot2)
-require(reshape2)
-require(wesanderson)
-require(Cairo)
-
 
 pal<-function(n)wes_palette(n = n,name =  "Darjeeling",type = 'continuous')
 
@@ -52,13 +44,8 @@ p3 <- ggplot(df,aes(x=IBU))+
 
 
 
-str(df)
 
-head(df)
-
-
-
-shinyServer(function(input, output,session) {
+function(input, output,session) {
   
   # Expression that generates a histogram. The expression is
   # wrapped in a call to renderPlot to indicate that:
@@ -383,4 +370,4 @@ shinyServer(function(input, output,session) {
 
 
 
-})
+}

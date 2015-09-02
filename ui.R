@@ -1,8 +1,3 @@
-library(shiny)
-require(dplyr)
-require(shinyjs)
-require(shinydashboard)
-
 
 
 

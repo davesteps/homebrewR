@@ -1,3 +1,14 @@
+require(gridExtra)
+require(dplyr)
+require(ggplot2)
+require(reshape2)
+require(wesanderson)
+require(Cairo)
+library(shiny)
+require(shinyjs)
+require(shinydashboard)
+
+
 
 load('styles.rdata')
 
