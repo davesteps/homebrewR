@@ -1,8 +1,8 @@
-require(stringr)
-require(RCurl)
-require('rvest')
-require(plyr)  
-require(ggplot2)
+# require(stringr)
+# require(RCurl)
+# require('rvest')
+# require(plyr)  
+# require(ggplot2)
 
 
 ext_num <- function(x,txt){
@@ -207,8 +207,8 @@ Y <- factor(df$style)
 testi <- sample(1:nrow(X),size = 20,replace = F)
 traini <- (1:nrow(X))[-testi]
 
-require(epicalc)
-require(randomForest)
+# require(epicalc)
+# require(randomForest)
 summary(Y)
 rf <- randomForest(x = X,y=Y,ntree=2500)
 rf

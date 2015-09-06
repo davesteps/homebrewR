@@ -2,7 +2,7 @@
 
 pal<-function(n)wes_palette(n = n,name =  "Darjeeling",type = 'continuous')
 
-load('../homebrewR_data/df.rdata')
+load('data/df.rdata')
 
 # 
 # str(df)
