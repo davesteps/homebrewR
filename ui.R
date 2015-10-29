@@ -47,8 +47,28 @@ shinyUI(bootstrapPage(useShinyjs(),
                                      div(class='info',
                                       p('Recipes by',a('beerrecipes.org',href='http://beerrecipes.org')),
                                       # p('Developed by',a('@davesteps',href='https://twitter.com/davesteps')),
-                                      a(icon('github fa-2x'),href='https://github.com/davesteps/homebrewR'),
-                                      a(icon('twitter fa-2x'),href='https://twitter.com/davesteps')
+                                      # a(icon('twitter fa-2x'),href='https://twitter.com/davesteps'),
+                                      p(
+                                      HTML("<div style='float:center'>
+                  <a href='https://twitter.com/share' 
+                                           class='twitter-share-button' 
+                                           align='middle' 
+                                           data-url='www.davesteps.com/homebrewR/' 
+                                           data-text='created by @davesteps: www.davesteps.com/homebrewR/' 
+                                           data-size='large'>Tweet
+                                           </a>
+                                           <script>!function(d,s,id){
+                                           var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+                                           if(!d.getElementById(id)){
+                                           js=d.createElement(s);
+                                           js.id=id;
+                                           js.src=p+'://platform.twitter.com/widgets.js';
+                                           fjs.parentNode.insertBefore(js,fjs);
+                                           }
+                                           }(document, 'script', 'twitter-wjs');
+                                           </script>
+                                           </div>")),
+                                      p(a(icon('github fa-2x'),href='https://github.com/davesteps/homebrewR'))
                                        )
                                       
                                       #                                                          
@@ -81,10 +101,10 @@ shinyUI(bootstrapPage(useShinyjs(),
 
                                                        tabPanel('Grains',
                                                                 h5('% of recipes containing each grain type'),
-                                                                plotOutput('maltPlot',height = 700)),
+                                                                plotOutput('maltPlot',height = 650)),
                                                        tabPanel('Hops',
                                                                 h5('% of recipes containing each hop type'),
-                                                                plotOutput('hopsPlot',height = 700)),
+                                                                plotOutput('hopsPlot',height = 650)),
                                                        
                                                        tabPanel('%ABV',
                                                                 h5('Distribution of %abv values'),
@@ -96,7 +116,7 @@ shinyUI(bootstrapPage(useShinyjs(),
                                                        
                                                        tabPanel('%ABV~OG',
                                                                 h5('Orignial Gravity vs %abv '),
-                                                                plotOutput('OGplot',height = 500)),
+                                                                plotOutput('OGplot',height = 600)),
                                                        tabPanel('Bitterness',
                                                                 h5('IBU Bitterness values by style'),
                                                                 plotOutput('IBUplot')),
