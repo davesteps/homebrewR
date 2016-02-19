@@ -17,7 +17,8 @@ shinyUI(bootstrapPage(useShinyjs(),
                         tags$head(
                           tags$link(rel="stylesheet", type="text/css",href="style.css"),
                           tags$script(type="text/javascript", src = "busy.js"),
-                          tags$script(src = "message-handler.js")
+                          tags$script(src = "message-handler.js"),
+                          includeScript("google-analytics.js")
                         )
                       ),
                       dashboardPage(skin = 'yellow', 
@@ -54,7 +55,7 @@ shinyUI(bootstrapPage(useShinyjs(),
                                            class='twitter-share-button' 
                                            align='middle' 
                                            data-url='www.davesteps.com/homebrewR/' 
-                                           data-text='created by @davesteps: www.davesteps.com/homebrewR/' 
+                                           data-text='created by @davesteps using #rstats and #shiny: davesteps.com/homebrewR/' 
                                            data-size='large'>Tweet
                                            </a>
                                            <script>!function(d,s,id){
