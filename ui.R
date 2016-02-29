@@ -4,15 +4,6 @@
 
 
 shinyUI(bootstrapPage(useShinyjs(),
-                      
-                      #                       # Hidden input boxes to save the variable to 
-                      #                       HTML(' <input type="text" id="username" name="username" style="display: none;"> '), 
-                      #                       includeScript("www/getusername.js"), 
-                      #                       # include the js code 
-                      #                       
-                      #                       
-                      
-                      # Add custom CSS & Javascript;
                       tagList(
                         tags$head(
                           tags$link(rel="stylesheet", type="text/css",href="style.css"),
@@ -90,12 +81,14 @@ shinyUI(bootstrapPage(useShinyjs(),
                                                                 choices = styles,
                                                                 selected=c('American Pale Ale','Imperial IPA','Weizenbock',
                                                                            'Weizen/Weissbier','Baltic Porter'),
-                                                                multiple = T)
+                                                                multiple = T),
+                                                    
+                                                    uiOutput('style_config')
                                                 ),
-                                                tabBox(width=9,
+                                                tabBox(width=9,id = 'style_main',
                                                        # tabsetPanel(type = 'pills',
                                                        tabPanel('Bitterness&Colour',
-                                                                h5('IBU Bitterness & SRM colour profile by beer style'),
+                                                                h5("This plot shows the bitterness and colour 'signature' of each beer style"),
                                                                 plotOutput('IBUSRMplot',height = 600,
                                                                            click = "plot1_click"
                                                                            )),
@@ -116,7 +109,7 @@ shinyUI(bootstrapPage(useShinyjs(),
                                                                 plotOutput('GravityPlot',height = 600)),
                                                        
                                                        tabPanel('%ABV~OG',
-                                                                h5('Orignial Gravity vs %abv '),
+                                                                h5('ABV ~ Orignial Gravity'),
                                                                 plotOutput('OGplot',height = 600)),
                                                        tabPanel('Bitterness',
                                                                 h5('IBU Bitterness values by style'),

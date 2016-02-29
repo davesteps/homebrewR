@@ -1,8 +1,8 @@
 name: homebrewR
 account: davesteps
 server: shinyapps.io
-bundleId: 361565
+bundleId: 383409
 url: https://davesteps.shinyapps.io/homebrewR/
-when: 1454091836.42394
+when: 1456754447.44148
 asMultiple: FALSE
 asStatic: FALSE

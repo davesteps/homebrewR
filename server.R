@@ -171,7 +171,7 @@ function(input, output,session) {
     p <- ggplot(dfsub,aes(y=IBU,x=style,fill=style))+
       scale_fill_manual(values = pal(length(unique(dfsub$style))))+
       geom_boxplot(alpha=0.5) +
-      scale_y_log10(breaks=(1:50)*10)+
+      scale_y_log10(breaks=2^(1:8))+
       theme_bw()+
       coord_flip()#+theme(legend.position='none')
     
@@ -184,20 +184,43 @@ function(input, output,session) {
     
     dfsub <- styledf()
     
-
+    brks <- 4^(1:4)
+    if(input$plottype=='Contours'){
       p <- ggplot(dfsub,aes(y=SRM,x=IBU,color=style))+
+        xlab('IBU Bitterness')+
+        ylab('SRM Colour')+
         # facet_wrap(~style)+
         geom_point(size=2) +
         geom_density2d(alpha=0.5) + 
         theme_bw()+
-        scale_y_log10(breaks=(1:20)*10)+
-        scale_x_log10(breaks=(1:10)*25)+
+        scale_y_log10(breaks=brks)+
+        scale_x_log10(breaks=brks)+
         scale_color_manual(values = pal(length(unique(dfsub$style))))
-      # stat_density2d(geom="tile", aes(fill = ..density..), contour = FALSE)
+        # stat_density2d(geom="raster", aes(fill = ..density..), contour = FALSE)
+      
+    } else {
+      p <- ggplot(dfsub,aes(y=SRM,x=IBU,color=style))+
+        xlab('IBU Bitterness')+
+        ylab('SRM Colour')+
+        facet_wrap(~style)+
+        stat_density2d(geom="raster", aes(fill = ..density..), contour = FALSE)+
+        scale_fill_gradientn(colours = rev(rainbow(3)))+
+        # geom_point()+
+        # geom_density2d(alpha=0.5) + 
+        theme_bw()+
+        scale_y_log10(breaks=brks)+
+        scale_x_log10(breaks=brks)
+        
+    }
     
     
         print(p)
     
+  })
+  
+  output$style_config <- renderUI({
+    if(input$style_main=='Bitterness&Colour'){
+      selectInput('plottype',label = 'Plot Type',choices = c('Contours','Heatmap'))}
   })
   
   
