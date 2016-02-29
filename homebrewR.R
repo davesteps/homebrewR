@@ -1,8 +1,8 @@
-# require(stringr)
-# require(RCurl)
-# require('rvest')
-# require(plyr)  
-# require(ggplot2)
+require(stringr)
+require(RCurl)
+require('rvest')
+require(plyr)  
+require(ggplot2)
 
 
 ext_num <- function(x,txt){
@@ -12,15 +12,15 @@ ext_num <- function(x,txt){
 
 
 parseBeer <- function(i){  
-  #i <- 11
+  # i <- 1
   
   #i <- 10236#6768#1944
   print(i)
   
   url <- paste('http://beerrecipes.org/showrecipe.php?recipeid=',i,sep='')
-  beer <- html(url)
+  beer <- read_html(url)
   
-  name <- html_nodes(beer,"div h1") %>% html_text()
+  name <- html_nodes(beer,"div h1")[[1]] %>% html_text()
   name
   if(name=="Find a Beer Recipe")
     return(NULL)#c(i,rep(NA,12)))
@@ -82,17 +82,19 @@ parseBeer <- function(i){
 }
 
 
-df1<-ldply(0001:1000,parseBeer)
+df1<-plyr::ldply(0001:10,parseBeer)
+df1
 save(df1,file='data/df1.rdata')
-df2<-ldply(1001:2000,parseBeer)
+
+df2<-plyr::ldply(1001:2000,parseBeer)
 save(df2,file='data/df2.rdata')
-df3<-ldply(2001:3000,parseBeer)
+df3<-plyr::ldply(2001:3000,parseBeer)
 save(df3,file='data/df3.rdata')
-df4<-ldply(3001:4000,parseBeer)
+df4<-plyr::ldply(3001:4000,parseBeer)
 save(df4,file='data/df4.rdata')
-df5<-ldply(4001:5000,parseBeer)
+df5<-plyr::ldply(4001:5000,parseBeer)
 save(df5,file='data/df5.rdata')
-df6<-ldply(5001:6000,parseBeer)
+df6<-plyr::ldply(5001:6000,parseBeer)
 save(df6,file='data/df6.rdata')
 # df7<-ldply(6001:7000,parseBeer)
 # save(df7,file='data/df7.rdata')
@@ -141,7 +143,11 @@ df$SRM[df$SRM==0&!is.na(df$SRM)]<-NA
 
 save(df,file='df.rdata')
 
-load('df.rdata')
+load('data/df.rdata')
+
+
+str(df)
+
 # save(df,file='C:/Users/ds10/Dropbox/R/homebrewR/R/df.rdata')
 # 
 styles <- sort(unique(df$style)) 

@@ -83,15 +83,20 @@ shinyUI(bootstrapPage(useShinyjs(),
                                                                            'Weizen/Weissbier','Baltic Porter'),
                                                                 multiple = T),
                                                     
-                                                    uiOutput('style_config')
+                                                    uiOutput('style_config'),
+                                                    uiOutput('points')
+                                                    
                                                 ),
                                                 tabBox(width=9,id = 'style_main',
                                                        # tabsetPanel(type = 'pills',
                                                        tabPanel('Bitterness&Colour',
                                                                 h5("This plot shows the bitterness and colour 'signature' of each beer style"),
-                                                                plotOutput('IBUSRMplot',height = 600,
-                                                                           click = "plot1_click"
-                                                                           )),
+                                                               
+                                                                plotOutput('IBUSRMplot',height = 600,click = "plot1_click"
+                                                                           
+                                                                           )
+                                                               
+                                                                ),
 
                                                        tabPanel('Grains',
                                                                 h5('% of recipes containing each grain type'),

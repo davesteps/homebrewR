@@ -4,6 +4,7 @@ pal<-function(n)wes_palette(n = n,name =  "Darjeeling",type = 'continuous')
 
 load('data/df.rdata')
 
+
 # 
 # str(df)
 df <- as.tbl(df)
@@ -43,6 +44,7 @@ p3 <- ggplot(df,aes(x=IBU))+
   geom_histogram(fill='green',alpha=0.6)
 
 
+str(df)
 
 
 function(input, output,session) {
@@ -84,18 +86,23 @@ function(input, output,session) {
     
   })
   
-  styledf <- reactive({
-    itype <- itype()
-    i <- rep(T,nrow(df))
-    ci <- input$slt_styles
-    
-    # print(ci)
-    
-    # if(is.null(ci)){
-    # ci <- df$style%in%ci}
-    
-    df <- df%>%filter(style%in%ci,itype)
+  styledf <- df
+  makeReactiveBinding('styledf')
+  
+  observe({
+    styledf <<- df%>%filter(style%in%input$slt_styles,itype())
   })
+  
+  
+  output$points <- renderUI({
+    # print(input$plot1_click)
+    r <- nearPoints(df = data.frame(styledf),coordinfo = input$plot1_click)
+    if(nrow(r)>0){
+      recipe_link(r)
+    }
+    
+  })
+  
   
   ingdf <- reactive({
     
@@ -118,24 +125,17 @@ function(input, output,session) {
 
   
   ###Style############
-  
-  observeEvent(input$plot1_click,{
-    
-    print(input$plot1_click)
-    
-  })
+
   
   
   output$ABVplot <- renderPlot({
     
-    
-    dfsub <- styledf()
-    
+
   
-    p <- ggplot(dfsub,aes(y=ABV,x=style,fill=style))+
+    p <- ggplot(styledf,aes(y=ABV,x=style,fill=style))+
       geom_boxplot(alpha=0.5) +
       scale_y_continuous(breaks=seq(0,20,1))+
-      scale_fill_manual(values = pal(length(unique(dfsub$style))))+
+      scale_fill_manual(values = pal(length(unique(styledf$style))))+
       theme_bw()+
       coord_flip()#+theme(legend.position='none')
 
@@ -145,18 +145,15 @@ function(input, output,session) {
 
 
   output$SRMplot <- renderPlot({
-    
-    
-    dfsub <- styledf()
-    
+  
 
     
-    p <- ggplot(dfsub,aes(y=SRM,x=style,color=SRMcol))+
+    p <- ggplot(styledf,aes(y=SRM,x=style,color=SRMcol))+
       #geom_boxplot(aes())+
       geom_jitter(size=3,position = position_jitter(width = .1))+
       scale_y_log10(breaks=c((1:10),seq(15,100,5)))+
       theme_bw()+
-      scale_color_identity()+#fill_manual(values = pal(length(unique(dfsub$style))))+
+      scale_color_identity()+#fill_manual(values = pal(length(unique(styledf$style))))+
       coord_flip()#+theme(legend.position='none')
     
     print(p)
@@ -165,11 +162,9 @@ function(input, output,session) {
   
   output$IBUplot <- renderPlot({
     
-    
-    dfsub <- styledf()
-    
-    p <- ggplot(dfsub,aes(y=IBU,x=style,fill=style))+
-      scale_fill_manual(values = pal(length(unique(dfsub$style))))+
+  
+    p <- ggplot(styledf,aes(y=IBU,x=style,fill=style))+
+      scale_fill_manual(values = pal(length(unique(styledf$style))))+
       geom_boxplot(alpha=0.5) +
       scale_y_log10(breaks=2^(1:8))+
       theme_bw()+
@@ -182,26 +177,23 @@ function(input, output,session) {
   output$IBUSRMplot <- renderPlot({
     
     
-    dfsub <- styledf()
-    
     brks <- 4^(1:4)
     if(input$plottype=='Contours'){
-      p <- ggplot(dfsub,aes(y=SRM,x=IBU,color=style))+
+      p <- ggplot(styledf,aes(y=SRM,x=IBU,color=style))+
         xlab('IBU Bitterness')+
         ylab('SRM Colour')+
         # facet_wrap(~style)+
         geom_point(size=2) +
         geom_density2d(alpha=0.5) + 
-        theme_bw()+
         scale_y_log10(breaks=brks)+
         scale_x_log10(breaks=brks)+
-        scale_color_manual(values = pal(length(unique(dfsub$style))))
+        scale_color_manual(values = pal(length(unique(styledf$style))))
         # stat_density2d(geom="raster", aes(fill = ..density..), contour = FALSE)
       
     } else {
-      p <- ggplot(dfsub,aes(y=SRM,x=IBU,color=style))+
-        xlab('IBU Bitterness')+
-        ylab('SRM Colour')+
+      p <- ggplot(styledf,aes(y=SRM,x=IBU,color=style))+
+        # xlab('IBU Bitterness')+
+        # ylab('SRM Colour')+
         facet_wrap(~style)+
         stat_density2d(geom="raster", aes(fill = ..density..), contour = FALSE)+
         scale_fill_gradientn(colours = rev(rainbow(3)))+
@@ -214,7 +206,7 @@ function(input, output,session) {
     }
     
     
-        print(p)
+        p
     
   })
   
@@ -226,12 +218,10 @@ function(input, output,session) {
   
   output$OGplot <- renderPlot({
     
-    
-    dfsub <- styledf()
-    
 
-    p <- ggplot(dfsub,aes(y=ABV,x=OG,col=style))+
-      scale_color_manual(values = pal(length(unique(dfsub$style))))+
+
+    p <- ggplot(styledf,aes(y=ABV,x=OG,col=style))+
+      scale_color_manual(values = pal(length(unique(styledf$style))))+
       theme_bw()+
       geom_point(size=4,alpha=0.75)#+
       #stat_smooth(method='lm',se=F)#+
@@ -242,23 +232,22 @@ function(input, output,session) {
   })
   
   output$summaryTble <- renderTable({
-    
-    df <- styledf() %>% group_by(style) %>% 
+    styledf %>% 
+      group_by(style) %>% 
       summarise(n=n(),
                 mean.OG=mean(OG,na.rm=T),
                 mean.FG=mean(FG,na.rm=T),
                 mean.ABV=mean(ABV,na.rm=T),
                 mean.SRM=mean(SRM,na.rm=T),
-                mean.IBU=mean(IBU,na.rm=T))
+                mean.IBU=mean(IBU,na.rm=T)) %>%
+      data.frame()
 
-  data.frame(df)
-    
   })
   
   output$maltPlot <- renderPlot({
     
     
-    df <- styledf()
+    df <- styledf
     
     malt.sum <- tapply(tolower(df$ingredients),df$style,FUN = function(x){
       (sapply(tolower(malts),FUN = function(y) length(grep(y,x)))/length(x))
@@ -282,7 +271,7 @@ function(input, output,session) {
   
   output$hopsPlot <- renderPlot({
     
-    df <- styledf()
+    df <- styledf
     
     hops.sum <- tapply(tolower(df$ingredients),df$style,FUN = function(x){
       sapply(tolower(hops),FUN = function(y) length(grep(y,x)))/length(x)
@@ -305,7 +294,7 @@ function(input, output,session) {
   
   output$GravityPlot <- renderPlot({
     
-    df <- styledf()[,c('style','OG','FG')]
+    df <- styledf[,c('style','OG','FG')]
     
 
     df <- melt(df)
@@ -381,11 +370,8 @@ function(input, output,session) {
   
   output$ABVdensplot <- renderPlot({
     
-    #dfsub <- builddf() 
-
-    
     p1 <-p1+geom_vline(xintercept=c(input$sld_ABV))
-    p2 <-p2+  geom_histogram(fill=SRMcol(input$sld_SRM))+geom_vline(xintercept=c(input$sld_SRM))
+    p2 <-p2+geom_histogram(fill=SRMcol(input$sld_SRM))+geom_vline(xintercept=c(input$sld_SRM))
     p3 <-p3+geom_vline(xintercept=c(input$sld_IBU))
        
     print(grid.arrange(p1,p2,p3,nrow=1))
