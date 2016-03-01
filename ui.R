@@ -83,8 +83,7 @@ shinyUI(bootstrapPage(useShinyjs(),
                                                                            'Weizen/Weissbier','Baltic Porter'),
                                                                 multiple = T),
                                                     
-                                                    uiOutput('style_config'),
-                                                    uiOutput('points')
+                                                    uiOutput('style_config')
                                                     
                                                 ),
                                                 tabBox(width=9,id = 'style_main',
@@ -94,8 +93,8 @@ shinyUI(bootstrapPage(useShinyjs(),
                                                                
                                                                 plotOutput('IBUSRMplot',height = 600,click = "plot1_click"
                                                                            
-                                                                           )
-                                                               
+                                                                           ),
+                                                                uiOutput('points')
                                                                 ),
 
                                                        tabPanel('Grains',

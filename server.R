@@ -44,11 +44,14 @@ p3 <- ggplot(df,aes(x=IBU))+
   geom_histogram(fill='green',alpha=0.6)
 
 
-str(df)
+# ggplot(df)+geom_point(aes(x=IBU,y=SRM,col=style))+
+#   scale_x_log10()+
+#   theme(legend.position='none')+
+#   scale_y_log10()
+
 
 
 function(input, output,session) {
-  
   # Expression that generates a histogram. The expression is
   # wrapped in a call to renderPlot to indicate that:
   #
@@ -174,8 +177,11 @@ function(input, output,session) {
     
   })
   
+  
   output$IBUSRMplot <- renderPlot({
     
+    if(is.null(input$plottype))
+      return(NULL)
     
     brks <- 4^(1:4)
     if(input$plottype=='Contours'){
@@ -348,7 +354,7 @@ function(input, output,session) {
 #   
 #   
   recipe_link <- function(r){
-    a(paste(r$name,'-',r$style,'-',r$ABV,'%'),href=paste('http://beerrecipes.org/showrecipe.php?recipeid=',r$id,sep=''),target='_blank')
+    a(paste(r$name,'-',r$style,'-',r$ABV,'%abv -',r$IBU,'IBU -',r$SRM,'SRM'),href=paste('http://beerrecipes.org/showrecipe.php?recipeid=',r$id,sep=''),target='_blank')
   }
   
   output$nearest <- renderUI({
