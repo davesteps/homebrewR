@@ -298,6 +298,12 @@ function(input, output,session) {
     
   })
   
+  output$d3 <- renderPlotly({
+    
+    plot_ly(styledf, x = SRM, y = IBU, z = ABV,color=style, type = "scatter3d", mode = "markers")
+
+  })
+  
   output$GravityPlot <- renderPlot({
     
     df <- styledf[,c('style','OG','FG')]

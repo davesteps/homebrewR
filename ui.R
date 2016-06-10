@@ -12,7 +12,7 @@ shinyUI(bootstrapPage(useShinyjs(),
                           includeScript("google-analytics.js")
                         )
                       ),
-                      dashboardPage(skin = 'yellow', 
+                      dashboardPage(skin = 'green', 
                                     title = "HomebrewR",
                                     dashboardHeader(title = HTML(paste(icon('beer'),'HomebrewR'))),
                                     dashboardSidebar(
@@ -123,7 +123,9 @@ shinyUI(bootstrapPage(useShinyjs(),
                                                                 plotOutput('SRMplot',height = 600)),
                                                        
                                                        tabPanel('Summary',
-                                                                tableOutput('summaryTble'))
+                                                                tableOutput('summaryTble')),
+                                                       tabPanel('3d',
+                                                                plotlyOutput('d3'))
                                                        
                                                 )
                                                 

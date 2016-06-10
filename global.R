@@ -7,7 +7,7 @@ require(Cairo)
 library(shiny)
 require(shinyjs)
 require(shinydashboard)
-
+require(plotly)
 
 
 load('styles.rdata')
