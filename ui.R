@@ -12,7 +12,7 @@ shinyUI(bootstrapPage(useShinyjs(),
                           includeScript("google-analytics.js")
                         )
                       ),
-                      dashboardPage(skin = 'green', 
+                      dashboardPage(skin = 'yellow', 
                                     title = "HomebrewR",
                                     dashboardHeader(title = HTML(paste(icon('beer'),'HomebrewR'))),
                                     dashboardSidebar(
@@ -60,7 +60,7 @@ shinyUI(bootstrapPage(useShinyjs(),
                                            }(document, 'script', 'twitter-wjs');
                                            </script>
                                            </div>")),
-                                      p(a(icon('github fa-2x'),href='https://github.com/davesteps/homebrewR'))
+                                      p(a(icon('github fa-2x'),href='https://github.com/davesteps/homebrewR',target='_blank'))
                                        )
                                       
                                       #                                                          
